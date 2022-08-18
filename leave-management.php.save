@@ -1,0 +1,3774 @@
+<?php 
+include 'login_db.php';
+include "api.php";
+//$obj=new api2();
+$date_picker_holiday_list=$obj->date_picker_holiday_list();
+$datepicker_working_list=$obj->datepicker_working_list();
+
+$only_sat_sun=$obj->only_sat_sun();
+$sat_sun=$obj->sat_sun();
+
+if(isset($_SESSION['user_id']))
+{
+    echo "";
+}
+else
+{
+   header("Location:login.php");
+    exit();
+}
+ ?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leave Tracker | Leave Management Page</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.css"
+    integrity="sha256-PF6MatZtiJ8/c9O9HQ8uSUXr++R9KBYu4gbNG5511WE=" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+  <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+
+
+
+<body>
+  <!-- Navbar -->
+  <?php include('nav.php'); ?>
+
+  <!--  -->
+ <input type="hidden" name="" id="user_id" value="<?php echo $_SESSION['user_id']; ?>">
+
+  <div class="show">
+    <div class="overlay"></div>
+    <div class="img-show">
+      <span>X</span>
+      <img src="">
+    </div>
+  </div>
+
+
+
+  <!-- edit popup user section -->
+  <div class="notes-overlay-edit1">
+  </div>
+
+
+
+
+  <!-- Main Section -->
+  <div class="grid-container">
+    <div class="grid-col-1">
+      <h3>Leave Management</h3>
+      <div class="tab-switch">
+        <span class="leave-title active">Leave Management</span>
+        <?php 
+                 $obj=new login();
+                 $funct_stats=$obj->admin_func($_SESSION['user_id']);
+                 $postn_stats=$obj->admin_postn($_SESSION['user_id']);
+                     // echo "<script>alert(".$funct_stats.");</script>";
+                     // echo "<script>alert(".$postn_stats.");</script>";
+                     // 
+                if($funct_stats==true && $postn_stats==true || $funct_stats==true && $postn_stats==false || $funct_stats==false && $postn_stats==true)
+                {
+                     ?>
+        <span class="admin-title">Admin</span>
+        <?php
+                }
+                elseif($funct_stats==false && $postn_stats==false)
+                {
+                        echo "";
+                }
+
+                 ?>
+
+      </div>
+      <div class="leave_admin-section">
+        <?php 
+                include('leave-section.php');
+                 ?>
+      </div>
+    </div>
+    <div class="grid-col-2">
+      <h4>Leave History</h4>
+
+
+
+      <?php 
+                 $obj=new login();
+                 $funct_stats=$obj->admin_func($_SESSION['user_id']);
+                 $postn_stats=$obj->admin_postn($_SESSION['user_id']);
+                     // echo "<script>alert(".$funct_stats.");</script>";
+                     // echo "<script>alert(".$postn_stats.");</script>";
+                     // 
+                if($funct_stats==true && $postn_stats==true || $funct_stats==true && $postn_stats==false || $funct_stats==false && $postn_stats==true)
+                {
+                     ?>
+      <div class="csv_buttons">
+        <a href=""><button class="csv_data">All Data</button></a><br>
+        <select id="csv_month_select" name="csv_month_select">
+          <option value="">Select Month</option>
+          <option value="0">All Months</option>
+          <option value="01">January</option>
+          <option value="02">February</option>
+          <option value="03">March</option>
+          <option value="04">April</option>
+          <option value="05">May</option>
+          <option value="06">June</option>
+          <option value="07">July</option>
+          <option value="08">August</option>
+          <option value="09">September</option>
+          <option value="10">October</option>
+          <option value="11">November</option>
+          <option value="12">December</option>
+        </select>
+        <select id="csv_location_select" name="csv_location_select">
+          <option value="0">Select Location</option>
+          <option value="1">India</option>
+          <option value="2">China</option>
+          <option value="2">Hong Kong</option>
+          <option value="2">USA</option>
+        </select>
+
+        <a href=""><button class="export_data">Export Data</button></a>
+      </div>
+      <?php
+                }
+                elseif($funct_stats==false && $postn_stats==false)
+                {
+                        echo "";
+                }
+
+                 ?>
+
+
+      <!-- <select class="location">
+              <option val="0">Select Country</option>
+              <option>China</option>
+              <option>India</option>
+            </select>
+
+            <select class="period">
+              <option val="0">Select Period</option>
+              <option value="All">All data</option>
+              <option value="01">Jan</option>
+              <option value="02">Feb</option>
+              <option value="03">Mar</option>
+              <option value="04">April</option>
+              <option value="05">May</option>
+              <option value="06">June</option>
+              <option value="07">July</option>
+              <option value="08">Aug</option>
+              <option value="09">Sep</option>
+              <option value="10">Oct</option>
+              <option value="11">Nov</option>
+              <option value="12">Dec</option>
+            </select>
+
+          <button class="export">Export as CSV</button>
+          <br> -->
+      <div class="toggle-btn">
+        <i class="fas fa-toggle-off" title="Toggle Button"></i>
+      </div>
+      <div class="grid-row-1">
+        <?php
+                 include('user-leave-history.php');
+                  ?>
+      </div>
+      <div class="grid-row-2">
+        <?php 
+              // include('user-calendar.php'); 
+                ?>
+      </div>
+    </div>
+    <!-- success message -->
+    <div class="success-msg">
+      <span class="successfully-saved"><i class="fa fa-thumbs-up"></i> Submitted!</span>
+    </div>
+    <div class="success-msg">
+      <span class="successfully-edited"><i class="fa fa-thumbs-up"></i> Updated!</span>
+    </div>
+    <div class="success-msg">
+      <span class="successfully-deleted"><i class="fa fa-thumbs-up"></i> Deleted!</span>
+    </div>
+     <!-- loader -->
+    <div class="loader"></div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+  <script src="js/main.js"></script>
+
+  <script>
+      let toggleBtnI = document.querySelector(".toggle-btn i");
+toggleBtnI.classList.add('fa-toggle-on');
+toggleBtnI.addEventListener("click", function () {
+  let weekTable = document.querySelector(".grid-weekly-table");
+  if (weekTable.style.display === "none") {
+    weekTable.style.display = "block";
+    toggleBtnI.classList.add('fa-toggle-on');
+  } else {
+    weekTable.style.display = "none";
+    toggleBtnI.classList.remove('fa-toggle-on');
+  }
+});
+    $(document).ready(function () {
+
+         /// Toggle Weekly Section///
+      // $('.toggle-btn button').on('click',function(){
+      //   $('.grid-weekly-table').toggle();
+      // });
+
+      ///// CSV Data /////
+      $('body').on('click', '.csv_data', function () {
+        //  e.preventDefault();
+        // var txt = $(this).text();
+        var url = "all.php";
+        $(this).parent().attr("href", url);
+        //            console.log(txt);
+
+      });
+
+
+
+      ///// Export Data /////
+      $('body').on('click', '.export_data', function () {
+        // e.preventDefault();
+        var csvMonth = $(this).closest('.csv_buttons').find('#csv_month_select');
+        var txt = $(csvMonth).find('option:selected').val();
+        var txt_val = $(csvMonth).find('option:selected').text();
+
+        console.log(txt);
+
+
+        var csvLocation = $(this).closest('.csv_buttons').find('#csv_location_select');
+        var txt1 = $(csvLocation).find('option:selected').text();
+        console.log(txt1);
+
+        if ($("#csv_location_select option:selected").index() == 0) {
+          alert('Please select location type');
+          return false;
+        }
+
+        if ($("#csv_month_select option:selected").index() == 0) {
+          alert('Please select Month');
+          return false;
+        }
+
+        if ($("#csv_month_select option:selected").val() == 0) {
+          // alert("hi");
+          var url = "only_location.php?location=" + txt1;
+          console.log(url);
+          $(this).parent().attr("href", url);
+        } else {
+          var url = "month_loctn.php?month=" + txt + "&location=" + txt1 + "&month_name=" + txt_val;
+          console.log(url);
+          $(this).parent().attr("href", url);
+
+        }
+
+
+      });
+
+
+      //             $('body').on('click', '.export', function (e) {
+      //                 e.preventDefault();
+
+      //                   // $(".select_country").attr("disabled","disabled");
+
+      //                 var country = $('.location').find(':selected').html();
+      //                var period = $('.period').find(':selected').val();
+      //                 alert(period);
+
+
+      //                 if ($(".location option:selected").index() == 0) 
+      //                 {
+      //                     alert('Please select location type');
+      //                     return false;
+      //                 }
+
+      //                   if ($(".period option:selected").index() == 0) 
+      //                 {
+      //                     alert('Please select period');
+      //                     return false;
+      //                 }
+
+      //            var formData = new FormData();
+      //                 formData.append('country', country);
+      //                 formData.append('period', period);
+
+      // if(period=="All")
+      // {
+      //   $.ajax({
+      //                     type: 'post',
+      //                     url: 'csv2.php?api=all_data2',
+      //                  //   url: 'rough.php',
+      //                     data: formData,
+      //                     processData: false,
+      //                     contentType: false,
+      //                     success: function (data) {
+      //                    //   alert(data);
+      //                    console.log(data);
+      //                   //location.reload();
+
+
+      //                     },
+      //                     error: function (data) {
+      //                         alert(
+      //                             "An error has occcured while applying leave. Please try again"
+      //                         );
+      //                     }
+      //                 });
+      // }
+      // else
+      // {
+      //   $.ajax({
+      //                     type: 'post',
+      //                    url: 'csv2.php?api=monthly',
+      //                    //  url: 'rough.php',
+      //                     data: formData,
+      //                     processData: false,
+      //                     contentType: false,
+      //                     success: function (data) {
+      //                    //   alert(data);
+      //                    console.log(data);
+      //                   //location.reload();
+
+
+      //                     },
+      //                     error: function (data) {
+      //                         alert(
+      //                             "An error has occcured while applying leave. Please try again"
+      //                         );
+      //                     }
+      //                 });    
+      // }      
+
+      //               });
+
+
+
+      $('body').on('click', function () {
+        //alert('hi');
+      });
+
+      $('body').on('click', '.log-out', function () {
+        var userID = $(this).attr('data-id');
+        $.ajax({
+          type: 'post',
+          url: 'login_db.php?api=LogOut',
+          data: {
+            id: userID
+          },
+          success: function (data) {
+            alert('logout successfully');
+            window.location.href = data2;
+
+          },
+          error: function (data) {
+            alert(
+              "An error has occcured while logout. Please try again"
+            );
+          }
+        });
+      });
+
+      $(function () {
+        $("#date1").datepicker();
+
+      });
+
+      $(function () {
+        $("#date2").datepicker();
+      });
+
+
+
+
+
+      //added below line to show the user calender on reload
+      $('.grid-row-2').load('user-calendar.php');
+      $('.csv_buttons').hide();
+      $('.toggle-btn').hide();
+
+      // Change panel between user and admin
+      $('body').on('click', '.leave-title', function (e) {
+        e.preventDefault();
+        location.reload();
+        $('.admin-title').removeClass('active');
+        $(this).addClass('active');
+
+
+        $('.leave_admin-section').load('leave-section.php');
+        $('.grid-row-1').load('user-leave-history.php');
+        $('.grid-row-2').load('user-calendar.php');
+        $('.csv_buttons').hide();
+        $('.toggle-btn').hide();
+      });
+
+
+      //            $('.admin-title').click(function (e) {
+      $('body').on('click', '.admin-title', function (e) {
+        e.preventDefault();
+        //    location.reload();
+        $('.leave-title').removeClass('active');
+        $(this).addClass('active');
+
+        $('.leave_admin-section').load('admin-section.php');
+        $('.grid-row-1').load('admin-leave-history.php');
+        $('.grid-row-2').load('admin-calendar.php');
+        $('.csv_buttons').show();
+        $('.toggle-btn').show();
+      });
+
+
+
+      // Delete user leave history row
+      $('body').on('click', '.user-cross', function () {
+
+        if (confirm("are you sure you want to delete it?")) {
+
+          var del = $(this);
+          var del_id = $(del).closest('.table-data').attr('data-id');
+          var user_id = $(del).closest('.table-data').attr('data-user-id');
+          var leaveType = $(del).closest('.table-data').find('.type').text();
+          var leaveCount = $(del).closest('.table-data').find('.count').text();
+          // alert(del_id);
+          // alert(user_id);
+          // alert(leaveType);
+          // alert(leaveCount);
+
+          $.ajax({
+            type: 'post',
+            url: 'api.php?api=del_user',
+            data: {
+              apply_id: del_id,
+              user_id: user_id,
+              leave_type: leaveType,
+              count: leaveCount
+            },
+            success: function (data) {
+              location.reload();
+              $(del).closest('.table-data').last().remove();
+              console.log(data);
+              $('.leave_admin-section').load('leave-section.php');
+            },
+            error: function (data) {
+              alert(
+                "An error has occcured while deleting. Please try again"
+              );
+            }
+          });
+
+          $(".success-msg").css("z-index", "unset");
+          $(".successfully-deleted").css("display", "block").delay(1000)
+            .fadeOut(400);
+        }
+        return false;
+
+
+      });
+
+
+      // Delete admin leave history row
+      $('body').on('click', '.admin-cross', function () {
+        //   alert('he');
+
+        if (confirm("are you sure you want to delete it?")) {
+
+          var del = $(this);
+          var apply_id = $(del).closest('.table-data').attr('data-id');
+          var user_id = $(del).closest('.table-data').attr('data-user-id');
+          var login_id = $('#user_id').val();
+          var type = $(del).closest('.table-data').find('.type').text();
+          var count = $(del).closest('.table-data').find('.count').text();
+          var funct_status = $('.funct_status').text();
+          var post_status = $('.post_status').text();
+          // alert(apply_id);
+          // alert(user_id);
+          // alert(login_id);
+          // alert(type);
+          // alert(count);
+          // alert(funct_status);
+          // alert(post_status);
+
+
+
+
+          $.ajax({
+            type: 'post',
+            url: 'api.php?api=del_admin',
+            data: {
+              apply_id: apply_id,
+              user_id: user_id,
+              login_id: login_id,
+              type: type,
+              count: count,
+              funct_status: funct_status,
+              post_status: post_status
+            },
+            success: function (data) {
+              $(del).closest('.table-data').last().remove();
+              console.log(data);
+              //alert(data);
+            },
+            error: function (data) {
+              alert(
+                "An error has occcured while deleting. Please try again"
+              );
+            }
+          });
+
+          $(".success-msg").css("z-index", "unset");
+          $(".successfully-deleted").css("display", "block").delay(1000)
+            .fadeOut(400);
+        }
+        return false;
+      });
+
+      // More info leave history
+      $('body').on('click', '.emp-data', function () {
+        var css = $(this).closest('.table-data').next('.more-info');
+        $(this).closest('.table-data').next('.more-info').slideToggle('slow');
+        $(css).css({
+          'display': 'grid'
+        });
+      });
+
+      // Cancel button for admin leave history section user info approval.
+      $('body').on('click', '.cancel', function () {
+        $(this).closest('.more-info').hide('slow');
+      });
+
+
+
+
+      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      function test() {
+        var sat_sun = '<?php echo  $sat_sun; ?>';
+        let sat_sun_data = JSON.parse(sat_sun);
+
+        // var datepicker_working_list='<?php   $datepicker_working_list; ?>';
+        // let datepicker_working_list_data=JSON.parse(datepicker_working_list);
+
+        var sun_sat_range = [];
+
+        var holiday_range = [];
+        //console.log(sat_sun_data);
+        //console.log(sat_sun_data['sun'].length);
+
+        for (var k = 0; k < sat_sun_data['sun'].length; k++) {
+          sun_sat_range.push(sat_sun_data["sun"][k]);
+        }
+
+        // console.log(sun_sat_range);        
+
+
+
+        for (var j = 0; j < holiday_data.length; j++) {
+          holiday_range.push(holiday_data[j].holiday_date);
+        }
+
+
+
+        $("#date1").datepicker({
+          beforeShowDay: function (date) {
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var day = date.getDate();
+
+            // Change format of date
+            var newdate = day + "-" + month + '-' + year;
+            //   console.log(newdate);
+
+
+
+            //console.log(datepicker_working_list_data.length);
+
+
+            for (var j = 0; j < only_sat_sun2['sun'].length; j++) {
+              var s_range = [only_sat_sun2['sun'][j]];
+
+              if ($.inArray(newdate, s_range) != -1) {
+                return [true, "sun_sat"];
+              }
+
+            }
+
+
+
+
+
+            for (var k = 0; k < datepicker_working_list_data.length; k++) {
+
+              var datepicker_working_list_range = datepicker_working_list_data[k].Working_day.split(' ');
+
+              //   console.log(datepicker_working_list_range);
+
+              var tooltip_workinglist = "Working for " + datepicker_working_list_data[k].holiday;
+              //   console.log(tooltip_workinglist);
+              if ($.inArray(newdate, datepicker_working_list_range) != -1) {
+                return [true, "highlight_workinglist", tooltip_workinglist];
+              }
+
+            }
+
+
+            // console.log(holiday_data.length);
+
+            for (var j = 0; j < holiday_data.length; j++) {
+
+              var holiday_range = holiday_data[j].holiday_date2.split(' ');
+
+              var tooltip_holiday = "Holiday for " + [holiday_data[j].holiday];
+
+              if ($.inArray(newdate, holiday_range) != -1) {
+                return [true, "highlight_holiday", tooltip_holiday];
+
+              }
+
+            }
+
+
+            return [true];
+          },
+
+          onSelect: function () {
+            myfunc();
+          }
+
+        });
+
+
+        $("#date2").datepicker({
+          beforeShowDay: function (date) {
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var day = date.getDate();
+
+            // Change format of date
+            var newdate = day + "-" + month + '-' + year;
+            //   console.log(newdate);
+
+
+            for (var j = 0; j < only_sat_sun2['sun'].length; j++) {
+              var s_range = [only_sat_sun2['sun'][j]];
+
+              if ($.inArray(newdate, s_range) != -1) {
+                return [true, "sun_sat"];
+              }
+
+            }
+
+            ///////////////////////////////////
+            for (var k = 0; k < datepicker_working_list_data.length; k++) {
+
+              var datepicker_working_list_range = datepicker_working_list_data[k].Working_day.split(' ');
+
+              //   console.log(datepicker_working_list_range);
+
+              var tooltip_workinglist = "Working for " + datepicker_working_list_data[k].holiday;
+              //   console.log(tooltip_workinglist);
+              if ($.inArray(newdate, datepicker_working_list_range) != -1) {
+                return [true, "highlight_workinglist", tooltip_workinglist];
+              }
+
+            }
+
+            //////////////////////////////////
+
+
+            for (var j = 0; j < holiday_data.length; j++) {
+
+              var holiday_range = holiday_data[j].holiday_date2.split(' ');
+
+              // console.log(data[0].final_status);
+              var tooltip_holiday = "Holiday for " + [holiday_data[j].holiday];
+
+              if ($.inArray(newdate, holiday_range) != -1) {
+                return [true, "highlight_holiday", tooltip_holiday];
+
+              }
+
+            }
+
+            return [true];
+          },
+
+
+          onSelect: function () {
+            myfunc();
+          }
+        });
+
+        var days;
+
+        function myfunc() {
+
+
+          var startDate = $("#date1").datepicker("getDate");
+          var endDate = $("#date2").datepicker("getDate");
+
+          function convert(startDate) {
+            var date = new Date(startDate),
+              mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+              day = ("0" + date.getDate()).slice(-2);
+            return [date.getFullYear(), mnth, day].join("-");
+          }
+
+          function convert(endDate) {
+            var date = new Date(endDate),
+              mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+              day = ("0" + date.getDate()).slice(-2);
+            return [date.getFullYear(), mnth, day].join("-");
+          }
+
+          var STARTDATE = convert(startDate);
+          var ENDDATE = convert(endDate);
+          // console.log(endDate);
+
+          var listDate = [];
+          var dateMove = new Date(STARTDATE);
+          var strDate = STARTDATE;
+
+
+          if (strDate != ENDDATE) {
+            while (strDate < ENDDATE) {
+              var strDate = dateMove.toISOString().slice(0, 10);
+              listDate.push(strDate);
+              dateMove.setDate(dateMove.getDate() + 1);
+            }
+          } else if (strDate == ENDDATE) {
+            //     while (strDate==ENDDATE)
+            // {
+            var strDate = dateMove.toISOString().slice(0, 10);
+            listDate.push(strDate);
+            dateMove.setDate(dateMove.getDate());
+            //} 
+          }
+
+          var holiday = holiday_range;
+          var sunSAT = sun_sat_range;
+          //  console.log(sunSAT);
+          /// console.log(listDate);
+
+          var count = 0;
+          var countt = 0;
+          //          console.log(holiday);
+          console.log(sunSAT);
+          console.log(listDate);
+
+          if (holiday != 0 && sunSAT != 0) {
+            for (var i = 0; i < holiday.length; i++) {
+              var t = listDate.includes(holiday[i]);
+
+              if (t == true) {
+                //                          count=1;
+                count++;
+              }
+              // else
+              // {
+              //   count=0;
+              // }
+            }
+
+            for (var j = 0; j < listDate.length; j++) {
+              var p = sunSAT.includes(listDate[j]);
+              console.log(p);
+              if (p == true) {
+                //   countt=1;
+                countt++;
+              }
+              // else
+              // {
+              //       countt=0;
+              // }
+            }
+
+
+            console.log("sunsat is :" + countt);
+            console.log("holiday is :" + count);
+            console.log("listdate is :" + listDate.length);
+            var total = listDate.length - count - countt;
+            console.log("total is :" + total);
+
+
+          } else {
+            var total = listDate.length;
+
+          }
+
+          $('#leave_count').val(total);
+        }
+      }
+
+      function test2() {
+        var sat_sun = '<?php echo  $sat_sun; ?>';
+        let sat_sun_data = JSON.parse(sat_sun);
+
+
+        // var datepicker_working_list='<?php   $datepicker_working_list; ?>';
+        // let datepicker_working_list_data=JSON.parse(datepicker_working_list);
+
+        var sun_sat_range = [];
+        for (var k = 0; k < sat_sun_data['sun'].length; k++) {
+          sun_sat_range.push(sat_sun_data["sun"][k]);
+        }
+
+
+        $("#date1").datepicker({
+          beforeShowDay: function (date) {
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var day = date.getDate();
+
+            // Change format of date
+            var newdate = day + "-" + month + '-' + year;
+            //   console.log(newdate);
+
+
+
+
+            for (var j = 0; j < only_sat_sun2['sun'].length; j++) {
+              var s_range = [only_sat_sun2['sun'][j]];
+
+              if ($.inArray(newdate, s_range) != -1) {
+                return [true, "sun_sat"];
+              }
+
+            }
+
+            for (var k = 0; k < datepicker_working_list_data.length; k++) {
+
+              var datepicker_working_list_range = datepicker_working_list_data[k].Working_day.split(' ');
+
+              //   console.log(datepicker_working_list_range);
+
+              var tooltip_workinglist = "Working for " + datepicker_working_list_data[k].holiday;
+              //   console.log(tooltip_workinglist);
+              if ($.inArray(newdate, datepicker_working_list_range) != -1) {
+                return [true, "highlight_workinglist", tooltip_workinglist];
+              }
+
+            }
+
+
+
+            //console.log(holiday_data.length);
+
+            return [true];
+          },
+
+          onSelect: function () {
+            myfunc();
+          }
+
+        });
+
+
+        $("#date2").datepicker({
+          beforeShowDay: function (date) {
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var day = date.getDate();
+
+            // Change format of date
+            var newdate = day + "-" + month + '-' + year;
+            //   console.log(newdate);
+
+
+
+            for (var j = 0; j < only_sat_sun2['sun'].length; j++) {
+              var s_range = [only_sat_sun2['sun'][j]];
+
+              if ($.inArray(newdate, s_range) != -1) {
+                return [true, "sun_sat"];
+              }
+
+            }
+
+
+
+
+            return [true];
+          },
+
+
+          onSelect: function () {
+            myfunc();
+          }
+        });
+
+        var days;
+
+        function myfunc() {
+
+
+          var startDate = $("#date1").datepicker("getDate");
+          var endDate = $("#date2").datepicker("getDate");
+
+          function convert(startDate) {
+            var date = new Date(startDate),
+              mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+              day = ("0" + date.getDate()).slice(-2);
+            return [date.getFullYear(), mnth, day].join("-");
+          }
+
+          function convert(endDate) {
+            var date = new Date(endDate),
+              mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+              day = ("0" + date.getDate()).slice(-2);
+            return [date.getFullYear(), mnth, day].join("-");
+          }
+
+          var STARTDATE = convert(startDate);
+          var ENDDATE = convert(endDate);
+          // console.log(endDate);
+
+          var listDate = [];
+          var dateMove = new Date(STARTDATE);
+          var strDate = STARTDATE;
+
+
+          if (strDate != ENDDATE) {
+            while (strDate < ENDDATE) {
+              var strDate = dateMove.toISOString().slice(0, 10);
+              listDate.push(strDate);
+              dateMove.setDate(dateMove.getDate() + 1);
+            }
+          } else if (strDate == ENDDATE) {
+            //     while (strDate==ENDDATE)
+            // {
+            var strDate = dateMove.toISOString().slice(0, 10);
+            listDate.push(strDate);
+            dateMove.setDate(dateMove.getDate());
+            //} 
+          }
+
+          var sunSAT = sun_sat_range;
+
+          var countt = 0;
+          //console.log(holiday[0]);
+          //   console.log(listDate[0]);
+
+          if (sunSAT != 0) {
+
+
+            for (var j = 0; j < listDate.length; j++) {
+              var p = sunSAT.includes(listDate[j]);
+              // console.log(p);
+              if (p == true) {
+                //   countt=1;
+                countt++;
+              }
+              // else
+              // {
+              //       countt=0;
+              // }
+            }
+
+            console.log("sunsat is :" + countt);
+            console.log("listdate is :" + listDate.length);
+            var total = listDate.length - countt;
+            console.log("total is :" + total);
+
+
+          } else {
+            var total = listDate.length;
+
+          }
+
+          $('#leave_count').val(total);
+        }
+      }
+
+      function test3() {
+        var sat_sun = '<?php echo  $sat_sun; ?>';
+        let sat_sun_data = JSON.parse(sat_sun);
+
+        // var datepicker_working_list='<?php   $datepicker_working_list; ?>';
+        // let datepicker_working_list_data=JSON.parse(datepicker_working_list);
+
+        var sun_sat_range = [];
+
+        var holiday_range = [];
+        //console.log(sat_sun_data);
+        //console.log(sat_sun_data['sun'].length);
+
+        for (var k = 0; k < sat_sun_data['sun'].length; k++) {
+          sun_sat_range.push(sat_sun_data["sun"][k]);
+        }
+
+        // console.log(sun_sat_range);        
+
+
+
+        for (var j = 0; j < holiday_data.length; j++) {
+          holiday_range.push(holiday_data[j].holiday_date);
+        }
+
+
+
+        $("#date1").datepicker({
+          beforeShowDay: function (date) {
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var day = date.getDate();
+
+            // Change format of date
+            var newdate = day + "-" + month + '-' + year;
+            //   console.log(newdate);
+
+
+            //console.log(datepicker_working_list_data.length);
+
+
+
+            for (var j = 0; j < only_sat_sun2['sun'].length; j++) {
+              var s_range = [only_sat_sun2['sun'][j]];
+
+              if ($.inArray(newdate, s_range) != -1) {
+                return [true, "sun_sat"];
+              }
+
+            }
+
+            // console.log(holiday_data.length);
+
+            for (var j = 0; j < holiday_data.length; j++) {
+
+              var holiday_range = holiday_data[j].holiday_date2.split(' ');
+
+              var tooltip_holiday = "Holiday for " + [holiday_data[j].holiday];
+
+              if ($.inArray(newdate, holiday_range) != -1) {
+                return [true, "highlight_holiday", tooltip_holiday];
+
+              }
+
+            }
+
+
+            return [true];
+          },
+
+          onSelect: function () {
+            myfunc();
+          }
+
+        });
+
+
+        $("#date2").datepicker({
+          beforeShowDay: function (date) {
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var day = date.getDate();
+
+            // Change format of date
+            var newdate = day + "-" + month + '-' + year;
+            //   console.log(newdate);
+
+
+
+            for (var j = 0; j < only_sat_sun2['sun'].length; j++) {
+              var s_range = [only_sat_sun2['sun'][j]];
+
+              if ($.inArray(newdate, s_range) != -1) {
+                return [true, "sun_sat"];
+              }
+
+            }
+
+            //////////////////////////////////
+
+
+            for (var j = 0; j < holiday_data.length; j++) {
+
+              var holiday_range = holiday_data[j].holiday_date2.split(' ');
+
+              // console.log(data[0].final_status);
+              var tooltip_holiday = "Holiday for " + [holiday_data[j].holiday];
+
+              if ($.inArray(newdate, holiday_range) != -1) {
+                return [true, "highlight_holiday", tooltip_holiday];
+
+              }
+
+            }
+
+            return [true];
+          },
+
+
+          onSelect: function () {
+            myfunc();
+          }
+        });
+
+        var days;
+
+        function myfunc() {
+
+
+          var startDate = $("#date1").datepicker("getDate");
+          var endDate = $("#date2").datepicker("getDate");
+
+          function convert(startDate) {
+            var date = new Date(startDate),
+              mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+              day = ("0" + date.getDate()).slice(-2);
+            return [date.getFullYear(), mnth, day].join("-");
+          }
+
+          function convert(endDate) {
+            var date = new Date(endDate),
+              mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+              day = ("0" + date.getDate()).slice(-2);
+            return [date.getFullYear(), mnth, day].join("-");
+          }
+
+          var STARTDATE = convert(startDate);
+          var ENDDATE = convert(endDate);
+          // console.log(endDate);
+
+          var listDate = [];
+          var dateMove = new Date(STARTDATE);
+          var strDate = STARTDATE;
+
+
+          if (strDate != ENDDATE) {
+            while (strDate < ENDDATE) {
+              var strDate = dateMove.toISOString().slice(0, 10);
+              listDate.push(strDate);
+              dateMove.setDate(dateMove.getDate() + 1);
+            }
+          } else if (strDate == ENDDATE) {
+            //     while (strDate==ENDDATE)
+            // {
+            var strDate = dateMove.toISOString().slice(0, 10);
+            listDate.push(strDate);
+            dateMove.setDate(dateMove.getDate());
+            //} 
+          }
+
+          var holiday = holiday_range;
+          var sunSAT = sun_sat_range;
+          //  console.log(sunSAT);
+          // console.log(listDate);
+
+          var count = 0;
+          var countt = 0;
+          //          console.log(holiday);
+          // console.log(sunSAT);
+          //        console.log(listDate);
+
+          if (holiday != 0 && sunSAT != 0) {
+            for (var i = 0; i < holiday.length; i++) {
+              var t = listDate.includes(holiday[i]);
+
+              if (t == true) {
+                //                          count=1;
+                count++;
+              }
+              // else
+              // {
+              //   count=0;
+              // }
+            }
+
+            for (var j = 0; j < listDate.length; j++) {
+              var p = sunSAT.includes(listDate[j]);
+              console.log(p);
+              if (p == true) {
+                //   countt=1;
+                countt++;
+              }
+              // else
+              // {
+              //       countt=0;
+              // }
+            }
+
+
+            console.log("sunsat is :" + countt);
+            console.log("holiday is :" + count);
+            console.log("listdate is :" + listDate.length);
+            var total = listDate.length - count - countt;
+            console.log("total is :" + total);
+
+
+          } else {
+            var total = listDate.length;
+
+          }
+
+          $('#leave_count').val(total);
+        }
+      }
+
+      function test4() {
+        var sat_sun = '<?php echo  $sat_sun; ?>';
+        let sat_sun_data = JSON.parse(sat_sun);
+
+        // var datepicker_working_list='<?php   $datepicker_working_list; ?>';
+        // let datepicker_working_list_data=JSON.parse(datepicker_working_list);
+
+        var sun_sat_range = [];
+
+        var holiday_range = [];
+        //console.log(sat_sun_data);
+        //console.log(sat_sun_data['sun'].length);
+
+        for (var k = 0; k < sat_sun_data['sun'].length; k++) {
+          sun_sat_range.push(sat_sun_data["sun"][k]);
+        }
+
+        // console.log(sun_sat_range);        
+
+
+
+        $("#date1").datepicker({
+          beforeShowDay: function (date) {
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var day = date.getDate();
+
+            // Change format of date
+            var newdate = day + "-" + month + '-' + year;
+
+            //console.log(only_sat_sun2['length']);
+            for (var j = 0; j < only_sat_sun2['sun'].length; j++) {
+              var s_range = [only_sat_sun2['sun'][j]];
+
+              if ($.inArray(newdate, s_range) != -1) {
+                return [true, "sun_sat"];
+              }
+
+            }
+
+
+            return [true];
+          },
+
+          onSelect: function () {
+            myfunc();
+          }
+
+        });
+
+
+        $("#date2").datepicker({
+          beforeShowDay: function (date) {
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var day = date.getDate();
+
+            // Change format of date
+            var newdate = day + "-" + month + '-' + year;
+            //   console.log(newdate);
+
+
+
+            for (var j = 0; j < only_sat_sun2['sun'].length; j++) {
+              var s_range = [only_sat_sun2['sun'][j]];
+
+              if ($.inArray(newdate, s_range) != -1) {
+                return [true, "sun_sat"];
+              }
+
+            }
+
+            return [true];
+          },
+
+
+          onSelect: function () {
+            myfunc();
+          }
+        });
+
+        var days;
+
+        function myfunc() {
+
+
+          var startDate = $("#date1").datepicker("getDate");
+          var endDate = $("#date2").datepicker("getDate");
+
+          function convert(startDate) {
+            var date = new Date(startDate),
+              mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+              day = ("0" + date.getDate()).slice(-2);
+            return [date.getFullYear(), mnth, day].join("-");
+          }
+
+          function convert(endDate) {
+            var date = new Date(endDate),
+              mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+              day = ("0" + date.getDate()).slice(-2);
+            return [date.getFullYear(), mnth, day].join("-");
+          }
+
+          var STARTDATE = convert(startDate);
+          var ENDDATE = convert(endDate);
+          // console.log(endDate);
+
+          var listDate = [];
+          var dateMove = new Date(STARTDATE);
+          var strDate = STARTDATE;
+
+
+          if (strDate != ENDDATE) {
+            while (strDate < ENDDATE) {
+              var strDate = dateMove.toISOString().slice(0, 10);
+              listDate.push(strDate);
+              dateMove.setDate(dateMove.getDate() + 1);
+            }
+          } else if (strDate == ENDDATE) {
+            //     while (strDate==ENDDATE)
+            // {
+            var strDate = dateMove.toISOString().slice(0, 10);
+            listDate.push(strDate);
+            dateMove.setDate(dateMove.getDate());
+            //} 
+          }
+
+          var holiday = holiday_range;
+          var sunSAT = sun_sat_range;
+          console.log(holiday.length);
+          console.log(sunSAT);
+          console.log(listDate);
+
+          var count = 0;
+          var countt = 0;
+          //          console.log(holiday);
+          // console.log(sunSAT);
+          //        console.log(listDate);
+
+          if (sunSAT != 0) {
+            for (var j = 0; j < listDate.length; j++) {
+              var p = sunSAT.includes(listDate[j]);
+              console.log(p);
+              if (p == true) {
+                //   countt=1;
+                countt++;
+              }
+              // else
+              // {
+              //       countt=0;
+              // }
+            }
+
+
+            console.log("sunsat is :" + countt);
+            console.log("holiday is :" + count);
+            console.log("listdate is :" + listDate.length);
+            var total = listDate.length - count - countt;
+            console.log("total is :" + total);
+
+
+          } else {
+            var total = listDate.length;
+
+          }
+
+          $('#leave_count').val(total);
+        }
+      }
+
+
+      function user_test() {
+        var sat_sun = '<?php echo  $sat_sun; ?>';
+        let sat_sun_data = JSON.parse(sat_sun);
+
+        // var datepicker_working_list='<?php   $datepicker_working_list; ?>';
+        // let datepicker_working_list_data=JSON.parse(datepicker_working_list);
+
+        var sun_sat_range = [];
+
+        var holiday_range = [];
+        //console.log(sat_sun_data);
+        //console.log(sat_sun_data['sun'].length);
+
+        for (var k = 0; k < sat_sun_data['sun'].length; k++) {
+          sun_sat_range.push(sat_sun_data["sun"][k]);
+        }
+
+        // console.log(sun_sat_range);        
+
+
+
+        for (var j = 0; j < holiday_data.length; j++) {
+          holiday_range.push(holiday_data[j].holiday_date);
+        }
+
+
+
+        $("#date1-edit-user").datepicker({
+          beforeShowDay: function (date) {
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var day = date.getDate();
+
+            // Change format of date
+            var newdate = day + "-" + month + '-' + year;
+            //   console.log(newdate);
+
+
+            //console.log(datepicker_working_list_data.length);
+
+
+            for (var j = 0; j < only_sat_sun2['sun'].length; j++) {
+              var s_range = [only_sat_sun2['sun'][j]];
+
+              if ($.inArray(newdate, s_range) != -1) {
+                return [true, "sun_sat"];
+              }
+
+            }
+
+
+            for (var k = 0; k < datepicker_working_list_data.length; k++) {
+
+              var datepicker_working_list_range = datepicker_working_list_data[k].Working_day.split(' ');
+
+              //   console.log(datepicker_working_list_range);
+
+              var tooltip_workinglist = "Working for " + datepicker_working_list_data[k].holiday;
+              //   console.log(tooltip_workinglist);
+              if ($.inArray(newdate, datepicker_working_list_range) != -1) {
+                return [true, "highlight_workinglist", tooltip_workinglist];
+              }
+
+            }
+
+
+            // console.log(holiday_data.length);
+
+            for (var j = 0; j < holiday_data.length; j++) {
+
+              var holiday_range = holiday_data[j].holiday_date2.split(' ');
+
+              var tooltip_holiday = "Holiday for " + [holiday_data[j].holiday];
+
+              if ($.inArray(newdate, holiday_range) != -1) {
+                return [true, "highlight_holiday", tooltip_holiday];
+
+              }
+
+            }
+
+
+            return [true];
+          },
+
+          onSelect: function () {
+            myfunc();
+          }
+
+        });
+
+
+        $("#date2-edit-user").datepicker({
+          beforeShowDay: function (date) {
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var day = date.getDate();
+
+            // Change format of date
+            var newdate = day + "-" + month + '-' + year;
+            //   console.log(newdate);
+
+
+            // }
+
+            for (var j = 0; j < only_sat_sun2['sun'].length; j++) {
+              var s_range = [only_sat_sun2['sun'][j]];
+
+              if ($.inArray(newdate, s_range) != -1) {
+                return [true, "sun_sat"];
+              }
+
+            }
+
+            ///////////////////////////////////
+            for (var k = 0; k < datepicker_working_list_data.length; k++) {
+
+              var datepicker_working_list_range = datepicker_working_list_data[k].Working_day.split(' ');
+
+              //   console.log(datepicker_working_list_range);
+
+              var tooltip_workinglist = "Working for " + datepicker_working_list_data[k].holiday;
+              //   console.log(tooltip_workinglist);
+              if ($.inArray(newdate, datepicker_working_list_range) != -1) {
+                return [true, "highlight_workinglist", tooltip_workinglist];
+              }
+
+            }
+
+            //////////////////////////////////
+
+
+            for (var j = 0; j < holiday_data.length; j++) {
+
+              var holiday_range = holiday_data[j].holiday_date2.split(' ');
+
+              // console.log(data[0].final_status);
+              var tooltip_holiday = "Holiday for " + [holiday_data[j].holiday];
+
+              if ($.inArray(newdate, holiday_range) != -1) {
+                return [true, "highlight_holiday", tooltip_holiday];
+
+              }
+
+            }
+
+            return [true];
+          },
+
+
+          onSelect: function () {
+            myfunc();
+          }
+        });
+
+        var days;
+
+        function myfunc() {
+
+
+          var startDate = $("#date1-edit-user").datepicker("getDate");
+          var endDate = $("#date2-edit-user").datepicker("getDate");
+
+          function convert(startDate) {
+            var date = new Date(startDate),
+              mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+              day = ("0" + date.getDate()).slice(-2);
+            return [date.getFullYear(), mnth, day].join("-");
+          }
+
+          function convert(endDate) {
+            var date = new Date(endDate),
+              mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+              day = ("0" + date.getDate()).slice(-2);
+            return [date.getFullYear(), mnth, day].join("-");
+          }
+
+          var STARTDATE = convert(startDate);
+          var ENDDATE = convert(endDate);
+          // console.log(endDate);
+
+          var listDate = [];
+          var dateMove = new Date(STARTDATE);
+          var strDate = STARTDATE;
+
+
+          if (strDate != ENDDATE) {
+            while (strDate < ENDDATE) {
+              var strDate = dateMove.toISOString().slice(0, 10);
+              listDate.push(strDate);
+              dateMove.setDate(dateMove.getDate() + 1);
+            }
+          } else if (strDate == ENDDATE) {
+            //     while (strDate==ENDDATE)
+            // {
+            var strDate = dateMove.toISOString().slice(0, 10);
+            listDate.push(strDate);
+            dateMove.setDate(dateMove.getDate());
+            //} 
+          }
+
+          var holiday = holiday_range;
+          var sunSAT = sun_sat_range;
+          console.log(sunSAT);
+          console.log(listDate);
+
+          var count = 0;
+          var countt = 0;
+          //          console.log(holiday);
+          // console.log(sunSAT);
+          //        console.log(listDate);
+
+          if (holiday != 0 && sunSAT != 0) {
+            for (var i = 0; i < holiday.length; i++) {
+              var t = listDate.includes(holiday[i]);
+
+              if (t == true) {
+                //                          count=1;
+                count++;
+              }
+              // else
+              // {
+              //   count=0;
+              // }
+            }
+
+            for (var j = 0; j < listDate.length; j++) {
+              var p = sunSAT.includes(listDate[j]);
+              console.log(p);
+              if (p == true) {
+                //   countt=1;
+                countt++;
+              }
+              // else
+              // {
+              //       countt=0;
+              // }
+            }
+
+
+            console.log("sunsat is :" + countt);
+            console.log("holiday is :" + count);
+            console.log("listdate is :" + listDate.length);
+            var total = listDate.length - count - countt;
+            console.log("total is :" + total);
+
+
+          } else {
+            var total = listDate.length;
+
+          }
+
+          $('#leave_count_edit_user').val(total);
+        }
+      }
+
+      function user_test2() {
+        var sat_sun = '<?php echo  $sat_sun; ?>';
+        let sat_sun_data = JSON.parse(sat_sun);
+
+
+        // var datepicker_working_list='<?php   $datepicker_working_list; ?>';
+        // let datepicker_working_list_data=JSON.parse(datepicker_working_list);
+
+        var sun_sat_range = [];
+        for (var k = 0; k < sat_sun_data['sun'].length; k++) {
+          sun_sat_range.push(sat_sun_data["sun"][k]);
+        }
+
+
+        $("#date1-edit-user").datepicker({
+          beforeShowDay: function (date) {
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var day = date.getDate();
+
+            // Change format of date
+            var newdate = day + "-" + month + '-' + year;
+            //   console.log(newdate);
+
+
+            for (var j = 0; j < only_sat_sun2['sun'].length; j++) {
+              var s_range = [only_sat_sun2['sun'][j]];
+
+              if ($.inArray(newdate, s_range) != -1) {
+                return [true, "sun_sat"];
+              }
+
+            }
+
+
+
+
+            for (var k = 0; k < datepicker_working_list_data.length; k++) {
+
+              var datepicker_working_list_range = datepicker_working_list_data[k].Working_day.split(' ');
+
+              //   console.log(datepicker_working_list_range);
+
+              var tooltip_workinglist = "Working for " + datepicker_working_list_data[k].holiday;
+              //   console.log(tooltip_workinglist);
+              if ($.inArray(newdate, datepicker_working_list_range) != -1) {
+                return [true, "highlight_workinglist", tooltip_workinglist];
+              }
+
+            }
+
+
+
+            //console.log(holiday_data.length);
+
+            return [true];
+          },
+
+          onSelect: function () {
+            myfunc();
+          }
+
+        });
+
+
+        $("#date2-edit-user").datepicker({
+          beforeShowDay: function (date) {
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var day = date.getDate();
+
+            // Change format of date
+            var newdate = day + "-" + month + '-' + year;
+            //   console.log(newdate);
+
+
+
+            for (var j = 0; j < only_sat_sun2['sun'].length; j++) {
+              var s_range = [only_sat_sun2['sun'][j]];
+
+              if ($.inArray(newdate, s_range) != -1) {
+                return [true, "sun_sat"];
+              }
+
+            }
+
+            return [true];
+          },
+
+
+          onSelect: function () {
+            myfunc();
+          }
+        });
+
+        var days;
+
+        function myfunc() {
+
+
+          var startDate = $("#date1-edit-user").datepicker("getDate");
+          var endDate = $("#date2-edit-user").datepicker("getDate");
+
+          function convert(startDate) {
+            var date = new Date(startDate),
+              mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+              day = ("0" + date.getDate()).slice(-2);
+            return [date.getFullYear(), mnth, day].join("-");
+          }
+
+          function convert(endDate) {
+            var date = new Date(endDate),
+              mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+              day = ("0" + date.getDate()).slice(-2);
+            return [date.getFullYear(), mnth, day].join("-");
+          }
+
+          var STARTDATE = convert(startDate);
+          var ENDDATE = convert(endDate);
+          // console.log(endDate);
+
+          var listDate = [];
+          var dateMove = new Date(STARTDATE);
+          var strDate = STARTDATE;
+
+
+          if (strDate != ENDDATE) {
+            while (strDate < ENDDATE) {
+              var strDate = dateMove.toISOString().slice(0, 10);
+              listDate.push(strDate);
+              dateMove.setDate(dateMove.getDate() + 1);
+            }
+          } else if (strDate == ENDDATE) {
+            //     while (strDate==ENDDATE)
+            // {
+            var strDate = dateMove.toISOString().slice(0, 10);
+            listDate.push(strDate);
+            dateMove.setDate(dateMove.getDate());
+            //} 
+          }
+
+          var sunSAT = sun_sat_range;
+
+          var countt = 0;
+          //console.log(holiday[0]);
+          console.log(listDate[0]);
+
+          if (sunSAT != 0) {
+
+
+            for (var j = 0; j < listDate.length; j++) {
+              var p = sunSAT.includes(listDate[j]);
+              console.log(p);
+              if (p == true) {
+                //   countt=1;
+                countt++;
+              }
+              // else
+              // {
+              //       countt=0;
+              // }
+            }
+
+            console.log("sunsat is :" + countt);
+            console.log("listdate is :" + listDate.length);
+            var total = listDate.length - countt;
+            console.log("total is :" + total);
+
+
+          } else {
+            var total = listDate.length;
+
+          }
+
+          $('#leave_count_edit_user').val(total);
+        }
+      }
+
+      function user_test3() {
+        var sat_sun = '<?php echo  $sat_sun; ?>';
+        let sat_sun_data = JSON.parse(sat_sun);
+
+        // var datepicker_working_list='<?php   $datepicker_working_list; ?>';
+        // let datepicker_working_list_data=JSON.parse(datepicker_working_list);
+
+        var sun_sat_range = [];
+
+        var holiday_range = [];
+        //console.log(sat_sun_data);
+        //console.log(sat_sun_data['sun'].length);
+
+        for (var k = 0; k < sat_sun_data['sun'].length; k++) {
+          sun_sat_range.push(sat_sun_data["sun"][k]);
+        }
+
+        // console.log(sun_sat_range);        
+
+
+
+        for (var j = 0; j < holiday_data.length; j++) {
+          holiday_range.push(holiday_data[j].holiday_date);
+        }
+
+
+
+        $("#date1-edit-user").datepicker({
+          beforeShowDay: function (date) {
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var day = date.getDate();
+
+            // Change format of date
+            var newdate = day + "-" + month + '-' + year;
+            //   console.log(newdate);
+
+
+            for (var j = 0; j < only_sat_sun2['sun'].length; j++) {
+              var s_range = [only_sat_sun2['sun'][j]];
+
+              if ($.inArray(newdate, s_range) != -1) {
+                return [true, "sun_sat"];
+              }
+
+            }
+
+
+
+            // console.log(holiday_data.length);
+
+            for (var j = 0; j < holiday_data.length; j++) {
+
+              var holiday_range = holiday_data[j].holiday_date2.split(' ');
+
+              var tooltip_holiday = "Holiday for " + [holiday_data[j].holiday];
+
+              if ($.inArray(newdate, holiday_range) != -1) {
+                return [true, "highlight_holiday", tooltip_holiday];
+
+              }
+
+            }
+
+
+            return [true];
+          },
+
+          onSelect: function () {
+            myfunc();
+          }
+
+        });
+
+
+        $("#date2-edit-user").datepicker({
+          beforeShowDay: function (date) {
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var day = date.getDate();
+
+            // Change format of date
+            var newdate = day + "-" + month + '-' + year;
+            //   console.log(newdate);
+
+
+
+            for (var j = 0; j < only_sat_sun2['sun'].length; j++) {
+              var s_range = [only_sat_sun2['sun'][j]];
+
+              if ($.inArray(newdate, s_range) != -1) {
+                return [true, "sun_sat"];
+              }
+
+            }
+
+
+
+            for (var j = 0; j < holiday_data.length; j++) {
+
+              var holiday_range = holiday_data[j].holiday_date2.split(' ');
+
+              // console.log(data[0].final_status);
+              var tooltip_holiday = "Holiday for " + [holiday_data[j].holiday];
+
+              if ($.inArray(newdate, holiday_range) != -1) {
+                return [true, "highlight_holiday", tooltip_holiday];
+
+              }
+
+            }
+
+            return [true];
+          },
+
+
+          onSelect: function () {
+            myfunc();
+          }
+        });
+
+        var days;
+
+        function myfunc() {
+
+
+          var startDate = $("#date1-edit-user").datepicker("getDate");
+          var endDate = $("#date2-edit-user").datepicker("getDate");
+
+          function convert(startDate) {
+            var date = new Date(startDate),
+              mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+              day = ("0" + date.getDate()).slice(-2);
+            return [date.getFullYear(), mnth, day].join("-");
+          }
+
+          function convert(endDate) {
+            var date = new Date(endDate),
+              mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+              day = ("0" + date.getDate()).slice(-2);
+            return [date.getFullYear(), mnth, day].join("-");
+          }
+
+          var STARTDATE = convert(startDate);
+          var ENDDATE = convert(endDate);
+          // console.log(endDate);
+
+          var listDate = [];
+          var dateMove = new Date(STARTDATE);
+          var strDate = STARTDATE;
+
+
+          if (strDate != ENDDATE) {
+            while (strDate < ENDDATE) {
+              var strDate = dateMove.toISOString().slice(0, 10);
+              listDate.push(strDate);
+              dateMove.setDate(dateMove.getDate() + 1);
+            }
+          } else if (strDate == ENDDATE) {
+            //     while (strDate==ENDDATE)
+            // {
+            var strDate = dateMove.toISOString().slice(0, 10);
+            listDate.push(strDate);
+            dateMove.setDate(dateMove.getDate());
+            //} 
+          }
+
+          var holiday = holiday_range;
+          var sunSAT = sun_sat_range;
+          console.log(sunSAT);
+          console.log(listDate);
+
+          var count = 0;
+          var countt = 0;
+          //          console.log(holiday);
+          // console.log(sunSAT);
+          //        console.log(listDate);
+
+          if (holiday != 0 && sunSAT != 0) {
+            for (var i = 0; i < holiday.length; i++) {
+              var t = listDate.includes(holiday[i]);
+
+              if (t == true) {
+                //                          count=1;
+                count++;
+              }
+              // else
+              // {
+              //   count=0;
+              // }
+            }
+
+            for (var j = 0; j < listDate.length; j++) {
+              var p = sunSAT.includes(listDate[j]);
+              console.log(p);
+              if (p == true) {
+                //   countt=1;
+                countt++;
+              }
+              // else
+              // {
+              //       countt=0;
+              // }
+            }
+
+
+            console.log("sunsat is :" + countt);
+            console.log("holiday is :" + count);
+            console.log("listdate is :" + listDate.length);
+            var total = listDate.length - count - countt;
+            console.log("total is :" + total);
+
+
+          } else {
+            var total = listDate.length;
+
+          }
+
+          $('#leave_count_edit_user').val(total);
+        }
+      }
+
+      function user_test4() {
+        var sat_sun = '<?php echo  $sat_sun; ?>';
+        let sat_sun_data = JSON.parse(sat_sun);
+
+        // var datepicker_working_list='<?php   $datepicker_working_list; ?>';
+        // let datepicker_working_list_data=JSON.parse(datepicker_working_list);
+
+        var sun_sat_range = [];
+
+        var holiday_range = [];
+        //console.log(sat_sun_data);
+        //console.log(sat_sun_data['sun'].length);
+
+        for (var k = 0; k < sat_sun_data['sun'].length; k++) {
+          sun_sat_range.push(sat_sun_data["sun"][k]);
+        }
+
+        // console.log(sun_sat_range);        
+
+
+
+        // for (var j = 0; j < holiday_data.length; j++)
+        // {    
+        // holiday_range.push(holiday_data[j].holiday_date);
+        // }
+
+
+
+        $("#date1-edit-user").datepicker({
+          beforeShowDay: function (date) {
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var day = date.getDate();
+
+            // Change format of date
+            var newdate = day + "-" + month + '-' + year;
+            //   console.log(newdate);
+
+            for (var j = 0; j < only_sat_sun2['sun'].length; j++) {
+              var s_range = [only_sat_sun2['sun'][j]];
+
+              if ($.inArray(newdate, s_range) != -1) {
+                return [true, "sun_sat"];
+              }
+
+            }
+            return [true];
+          },
+
+          onSelect: function () {
+            myfunc();
+          }
+
+        });
+
+
+        $("#date2-edit-user").datepicker({
+          beforeShowDay: function (date) {
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var day = date.getDate();
+
+            // Change format of date
+            var newdate = day + "-" + month + '-' + year;
+            //   console.log(newdate);
+
+            for (var j = 0; j < only_sat_sun2['sun'].length; j++) {
+              var s_range = [only_sat_sun2['sun'][j]];
+
+              if ($.inArray(newdate, s_range) != -1) {
+                return [true, "sun_sat"];
+              }
+
+            }
+            return [true];
+          },
+
+
+          onSelect: function () {
+            myfunc();
+          }
+        });
+
+        var days;
+
+        function myfunc() {
+
+
+          var startDate = $("#date1-edit-user").datepicker("getDate");
+          var endDate = $("#date2-edit-user").datepicker("getDate");
+
+          function convert(startDate) {
+            var date = new Date(startDate),
+              mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+              day = ("0" + date.getDate()).slice(-2);
+            return [date.getFullYear(), mnth, day].join("-");
+          }
+
+          function convert(endDate) {
+            var date = new Date(endDate),
+              mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+              day = ("0" + date.getDate()).slice(-2);
+            return [date.getFullYear(), mnth, day].join("-");
+          }
+
+          var STARTDATE = convert(startDate);
+          var ENDDATE = convert(endDate);
+          // console.log(endDate);
+
+          var listDate = [];
+          var dateMove = new Date(STARTDATE);
+          var strDate = STARTDATE;
+
+
+          if (strDate != ENDDATE) {
+            while (strDate < ENDDATE) {
+              var strDate = dateMove.toISOString().slice(0, 10);
+              listDate.push(strDate);
+              dateMove.setDate(dateMove.getDate() + 1);
+            }
+          } else if (strDate == ENDDATE) {
+            //     while (strDate==ENDDATE)
+            // {
+            var strDate = dateMove.toISOString().slice(0, 10);
+            listDate.push(strDate);
+            dateMove.setDate(dateMove.getDate());
+            //} 
+          }
+
+          var holiday = holiday_range;
+          var sunSAT = sun_sat_range;
+          console.log(holiday.length);
+          console.log(sunSAT);
+          console.log(listDate);
+
+          var count = 0;
+          var countt = 0;
+          //          console.log(holiday);
+          // console.log(sunSAT);
+          //        console.log(listDate);
+
+          if (sunSAT != 0) {
+            for (var j = 0; j < listDate.length; j++) {
+              var p = sunSAT.includes(listDate[j]);
+              console.log(p);
+              if (p == true) {
+                //   countt=1;
+                countt++;
+              }
+              // else
+              // {
+              //       countt=0;
+              // }
+            }
+
+
+            console.log("sunsat is :" + countt);
+            console.log("holiday is :" + count);
+            console.log("listdate is :" + listDate.length);
+            var total = listDate.length - count - countt;
+            console.log("total is :" + total);
+
+
+          } else {
+            var total = listDate.length;
+
+          }
+
+          $('#leave_count_edit_user').val(total);
+        }
+      }
+
+
+
+      function admin_test() {
+        var sat_sun = '<?php echo  $sat_sun; ?>';
+        let sat_sun_data = JSON.parse(sat_sun);
+
+        // var datepicker_working_list='<?php   $datepicker_working_list; ?>';
+        // let datepicker_working_list_data=JSON.parse(datepicker_working_list);
+
+        var sun_sat_range = [];
+
+        var holiday_range = [];
+        //console.log(sat_sun_data);
+        //console.log(sat_sun_data['sun'].length);
+
+        for (var k = 0; k < sat_sun_data['sun'].length; k++) {
+          sun_sat_range.push(sat_sun_data["sun"][k]);
+        }
+
+        // console.log(sun_sat_range);        
+
+
+
+        for (var j = 0; j < holiday_data.length; j++) {
+          holiday_range.push(holiday_data[j].holiday_date);
+        }
+
+
+
+        $("#date1-edit-admin").datepicker({
+          beforeShowDay: function (date) {
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var day = date.getDate();
+
+            // Change format of date
+            var newdate = day + "-" + month + '-' + year;
+            //   console.log(newdate);
+
+
+            for (var j = 0; j < only_sat_sun2['sun'].length; j++) {
+              var s_range = [only_sat_sun2['sun'][j]];
+
+              if ($.inArray(newdate, s_range) != -1) {
+                return [true, "sun_sat"];
+              }
+
+            }
+
+            //console.log(datepicker_working_list_data.length);
+
+            for (var k = 0; k < datepicker_working_list_data.length; k++) {
+
+              var datepicker_working_list_range = datepicker_working_list_data[k].Working_day.split(' ');
+
+              //   console.log(datepicker_working_list_range);
+
+              var tooltip_workinglist = "Working for " + datepicker_working_list_data[k].holiday;
+              //   console.log(tooltip_workinglist);
+              if ($.inArray(newdate, datepicker_working_list_range) != -1) {
+                return [true, "highlight_workinglist", tooltip_workinglist];
+              }
+
+            }
+
+
+            // console.log(holiday_data.length);
+
+            for (var j = 0; j < holiday_data.length; j++) {
+
+              var holiday_range = holiday_data[j].holiday_date2.split(' ');
+
+              var tooltip_holiday = "Holiday for " + [holiday_data[j].holiday];
+
+              if ($.inArray(newdate, holiday_range) != -1) {
+                return [true, "highlight_holiday", tooltip_holiday];
+
+              }
+
+            }
+
+
+            return [true];
+          },
+
+          onSelect: function () {
+            myfunc();
+          }
+
+        });
+
+
+        $("#date2-edit-admin").datepicker({
+          beforeShowDay: function (date) {
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var day = date.getDate();
+
+            // Change format of date
+            var newdate = day + "-" + month + '-' + year;
+            //   console.log(newdate);
+
+
+            for (var j = 0; j < only_sat_sun2.length; j++) {
+              var s_range = [only_sat_sun2[j]];
+
+              if ($.inArray(newdate, s_range) != -1) {
+                return [true, "sun_sat"];
+              }
+
+            }
+
+            ///////////////////////////////////
+            for (var k = 0; k < datepicker_working_list_data.length; k++) {
+
+              var datepicker_working_list_range = datepicker_working_list_data[k].Working_day.split(' ');
+
+              //   console.log(datepicker_working_list_range);
+
+              var tooltip_workinglist = "Working for " + datepicker_working_list_data[k].holiday;
+              //   console.log(tooltip_workinglist);
+              if ($.inArray(newdate, datepicker_working_list_range) != -1) {
+                return [true, "highlight_workinglist", tooltip_workinglist];
+              }
+
+            }
+
+            //////////////////////////////////
+
+
+            for (var j = 0; j < holiday_data.length; j++) {
+
+              var holiday_range = holiday_data[j].holiday_date2.split(' ');
+
+              // console.log(data[0].final_status);
+              var tooltip_holiday = "Holiday for " + [holiday_data[j].holiday];
+
+              if ($.inArray(newdate, holiday_range) != -1) {
+                return [true, "highlight_holiday", tooltip_holiday];
+
+              }
+
+            }
+
+            return [true];
+          },
+
+
+          onSelect: function () {
+            myfunc();
+          }
+        });
+
+        var days;
+
+        function myfunc() {
+
+
+          var startDate = $("#date1-edit-admin").datepicker("getDate");
+          var endDate = $("#date2-edit-admin").datepicker("getDate");
+
+          function convert(startDate) {
+            var date = new Date(startDate),
+              mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+              day = ("0" + date.getDate()).slice(-2);
+            return [date.getFullYear(), mnth, day].join("-");
+          }
+
+          function convert(endDate) {
+            var date = new Date(endDate),
+              mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+              day = ("0" + date.getDate()).slice(-2);
+            return [date.getFullYear(), mnth, day].join("-");
+          }
+
+          var STARTDATE = convert(startDate);
+          var ENDDATE = convert(endDate);
+          // console.log(endDate);
+
+          var listDate = [];
+          var dateMove = new Date(STARTDATE);
+          var strDate = STARTDATE;
+
+
+          if (strDate != ENDDATE) {
+            while (strDate < ENDDATE) {
+              var strDate = dateMove.toISOString().slice(0, 10);
+              listDate.push(strDate);
+              dateMove.setDate(dateMove.getDate() + 1);
+            }
+          } else if (strDate == ENDDATE) {
+            //     while (strDate==ENDDATE)
+            // {
+            var strDate = dateMove.toISOString().slice(0, 10);
+            listDate.push(strDate);
+            dateMove.setDate(dateMove.getDate());
+            //} 
+          }
+
+          var holiday = holiday_range;
+          var sunSAT = sun_sat_range;
+          console.log(sunSAT);
+          console.log(listDate);
+
+          var count = 0;
+          var countt = 0;
+          //          console.log(holiday);
+          // console.log(sunSAT);
+          //        console.log(listDate);
+
+          if (holiday != 0 && sunSAT != 0) {
+            for (var i = 0; i < holiday.length; i++) {
+              var t = listDate.includes(holiday[i]);
+
+              if (t == true) {
+                //                          count=1;
+                count++;
+              }
+              // else
+              // {
+              //   count=0;
+              // }
+            }
+
+            for (var j = 0; j < listDate.length; j++) {
+              var p = sunSAT.includes(listDate[j]);
+              console.log(p);
+              if (p == true) {
+                //   countt=1;
+                countt++;
+              }
+              // else
+              // {
+              //       countt=0;
+              // }
+            }
+
+
+            console.log("sunsat is :" + countt);
+            console.log("holiday is :" + count);
+            console.log("listdate is :" + listDate.length);
+            var total = listDate.length - count - countt;
+            console.log("total is :" + total);
+
+
+          } else {
+            var total = listDate.length;
+
+          }
+
+          $('#leave_count_edit_admin').val(total);
+        }
+      }
+
+      function admin_test2() {
+        var sat_sun = '<?php echo  $sat_sun; ?>';
+        let sat_sun_data = JSON.parse(sat_sun);
+
+
+        // var datepicker_working_list='<?php   $datepicker_working_list; ?>';
+        // let datepicker_working_list_data=JSON.parse(datepicker_working_list);
+
+        var sun_sat_range = [];
+        for (var k = 0; k < sat_sun_data['sun'].length; k++) {
+          sun_sat_range.push(sat_sun_data["sun"][k]);
+        }
+
+
+        $("#date1-edit-admin").datepicker({
+          beforeShowDay: function (date) {
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var day = date.getDate();
+
+            // Change format of date
+            var newdate = day + "-" + month + '-' + year;
+            //   console.log(newdate);
+
+
+
+            for (var j = 0; j < only_sat_sun2['sun'].length; j++) {
+              var s_range = [only_sat_sun2['sun'][j]];
+
+              if ($.inArray(newdate, s_range) != -1) {
+                return [true, "sun_sat"];
+              }
+
+            }
+
+
+
+            for (var k = 0; k < datepicker_working_list_data.length; k++) {
+
+              var datepicker_working_list_range = datepicker_working_list_data[k].Working_day.split(' ');
+
+              //   console.log(datepicker_working_list_range);
+
+              var tooltip_workinglist = "Working for " + datepicker_working_list_data[k].holiday;
+              //   console.log(tooltip_workinglist);
+              if ($.inArray(newdate, datepicker_working_list_range) != -1) {
+                return [true, "highlight_workinglist", tooltip_workinglist];
+              }
+
+            }
+
+
+
+            //console.log(holiday_data.length);
+
+            return [true];
+          },
+
+          onSelect: function () {
+            myfunc();
+          }
+
+        });
+
+
+        $("#date2-edit-admin").datepicker({
+          beforeShowDay: function (date) {
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var day = date.getDate();
+
+            // Change format of date
+            var newdate = day + "-" + month + '-' + year;
+            //   console.log(newdate);
+
+
+            for (var j = 0; j < only_sat_sun2['sun'].length; j++) {
+              var s_range = [only_sat_sun2['sun'][j]];
+
+              if ($.inArray(newdate, s_range) != -1) {
+                return [true, "sun_sat"];
+              }
+
+            }
+
+            return [true];
+          },
+
+
+          onSelect: function () {
+            myfunc();
+          }
+        });
+
+        var days;
+
+        function myfunc() {
+
+
+          var startDate = $("#date1-edit-admin").datepicker("getDate");
+          var endDate = $("#date2-edit-admin").datepicker("getDate");
+
+          function convert(startDate) {
+            var date = new Date(startDate),
+              mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+              day = ("0" + date.getDate()).slice(-2);
+            return [date.getFullYear(), mnth, day].join("-");
+          }
+
+          function convert(endDate) {
+            var date = new Date(endDate),
+              mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+              day = ("0" + date.getDate()).slice(-2);
+            return [date.getFullYear(), mnth, day].join("-");
+          }
+
+          var STARTDATE = convert(startDate);
+          var ENDDATE = convert(endDate);
+          // console.log(endDate);
+
+          var listDate = [];
+          var dateMove = new Date(STARTDATE);
+          var strDate = STARTDATE;
+
+
+          if (strDate != ENDDATE) {
+            while (strDate < ENDDATE) {
+              var strDate = dateMove.toISOString().slice(0, 10);
+              listDate.push(strDate);
+              dateMove.setDate(dateMove.getDate() + 1);
+            }
+          } else if (strDate == ENDDATE) {
+            //     while (strDate==ENDDATE)
+            // {
+            var strDate = dateMove.toISOString().slice(0, 10);
+            listDate.push(strDate);
+            dateMove.setDate(dateMove.getDate());
+            //} 
+          }
+
+          var sunSAT = sun_sat_range;
+
+          var countt = 0;
+          //console.log(holiday[0]);
+          console.log(listDate[0]);
+
+          if (sunSAT != 0) {
+
+
+            for (var j = 0; j < listDate.length; j++) {
+              var p = sunSAT.includes(listDate[j]);
+              console.log(p);
+              if (p == true) {
+                //   countt=1;
+                countt++;
+              }
+              // else
+              // {
+              //       countt=0;
+              // }
+            }
+
+            console.log("sunsat is :" + countt);
+            console.log("listdate is :" + listDate.length);
+            var total = listDate.length - countt;
+            console.log("total is :" + total);
+
+
+          } else {
+            var total = listDate.length;
+
+          }
+
+          $('#leave_count_edit_admin').val(total);
+        }
+      }
+
+      function admin_test3() {
+        var sat_sun = '<?php echo  $sat_sun; ?>';
+        let sat_sun_data = JSON.parse(sat_sun);
+
+        // var datepicker_working_list='<?php   $datepicker_working_list; ?>';
+        // let datepicker_working_list_data=JSON.parse(datepicker_working_list);
+
+        var sun_sat_range = [];
+
+        var holiday_range = [];
+        //console.log(sat_sun_data);
+        //console.log(sat_sun_data['sun'].length);
+
+        for (var k = 0; k < sat_sun_data['sun'].length; k++) {
+          sun_sat_range.push(sat_sun_data["sun"][k]);
+        }
+
+        // console.log(sun_sat_range);        
+
+
+
+        for (var j = 0; j < holiday_data.length; j++) {
+          holiday_range.push(holiday_data[j].holiday_date);
+        }
+
+
+
+        $("#date1-edit-admin").datepicker({
+          beforeShowDay: function (date) {
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var day = date.getDate();
+
+            // Change format of date
+            var newdate = day + "-" + month + '-' + year;
+            //   console.log(newdate);
+
+            for (var j = 0; j < only_sat_sun2['sun'].length; j++) {
+              var s_range = [only_sat_sun2['sun'][j]];
+
+              if ($.inArray(newdate, s_range) != -1) {
+                return [true, "sun_sat"];
+              }
+
+            }
+
+            // console.log(holiday_data.length);
+
+            for (var j = 0; j < holiday_data.length; j++) {
+
+              var holiday_range = holiday_data[j].holiday_date2.split(' ');
+
+              var tooltip_holiday = "Holiday for " + [holiday_data[j].holiday];
+
+              if ($.inArray(newdate, holiday_range) != -1) {
+                return [true, "highlight_holiday", tooltip_holiday];
+
+              }
+
+            }
+
+
+            return [true];
+          },
+
+          onSelect: function () {
+            myfunc();
+          }
+
+        });
+
+
+        $("#date2-edit-admin").datepicker({
+          beforeShowDay: function (date) {
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var day = date.getDate();
+
+            // Change format of date
+            var newdate = day + "-" + month + '-' + year;
+            //   console.log(newdate);
+
+
+
+            for (var j = 0; j < only_sat_sun2['sun'].length; j++) {
+              var s_range = [only_sat_sun2['sun'][j]];
+
+              if ($.inArray(newdate, s_range) != -1) {
+                return [true, "sun_sat"];
+              }
+
+            }
+
+            for (var j = 0; j < holiday_data.length; j++) {
+
+              var holiday_range = holiday_data[j].holiday_date2.split(' ');
+
+              // console.log(data[0].final_status);
+              var tooltip_holiday = "Holiday for " + [holiday_data[j].holiday];
+
+              if ($.inArray(newdate, holiday_range) != -1) {
+                return [true, "highlight_holiday", tooltip_holiday];
+
+              }
+
+            }
+
+            return [true];
+          },
+
+
+          onSelect: function () {
+            myfunc();
+          }
+        });
+
+        var days;
+
+        function myfunc() {
+
+
+          var startDate = $("#date1-edit-admin").datepicker("getDate");
+          var endDate = $("#date2-edit-admin").datepicker("getDate");
+
+          function convert(startDate) {
+            var date = new Date(startDate),
+              mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+              day = ("0" + date.getDate()).slice(-2);
+            return [date.getFullYear(), mnth, day].join("-");
+          }
+
+          function convert(endDate) {
+            var date = new Date(endDate),
+              mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+              day = ("0" + date.getDate()).slice(-2);
+            return [date.getFullYear(), mnth, day].join("-");
+          }
+
+          var STARTDATE = convert(startDate);
+          var ENDDATE = convert(endDate);
+          // console.log(endDate);
+
+          var listDate = [];
+          var dateMove = new Date(STARTDATE);
+          var strDate = STARTDATE;
+
+
+          if (strDate != ENDDATE) {
+            while (strDate < ENDDATE) {
+              var strDate = dateMove.toISOString().slice(0, 10);
+              listDate.push(strDate);
+              dateMove.setDate(dateMove.getDate() + 1);
+            }
+          } else if (strDate == ENDDATE) {
+            //     while (strDate==ENDDATE)
+            // {
+            var strDate = dateMove.toISOString().slice(0, 10);
+            listDate.push(strDate);
+            dateMove.setDate(dateMove.getDate());
+            //} 
+          }
+
+          var holiday = holiday_range;
+          var sunSAT = sun_sat_range;
+          console.log(sunSAT);
+          console.log(listDate);
+
+          var count = 0;
+          var countt = 0;
+          //          console.log(holiday);
+          // console.log(sunSAT);
+          //        console.log(listDate);
+
+          if (holiday != 0 && sunSAT != 0) {
+            for (var i = 0; i < holiday.length; i++) {
+              var t = listDate.includes(holiday[i]);
+
+              if (t == true) {
+                //                          count=1;
+                count++;
+              }
+              // else
+              // {
+              //   count=0;
+              // }
+            }
+
+            for (var j = 0; j < listDate.length; j++) {
+              var p = sunSAT.includes(listDate[j]);
+              console.log(p);
+              if (p == true) {
+                //   countt=1;
+                countt++;
+              }
+              // else
+              // {
+              //       countt=0;
+              // }
+            }
+
+
+            console.log("sunsat is :" + countt);
+            console.log("holiday is :" + count);
+            console.log("listdate is :" + listDate.length);
+            var total = listDate.length - count - countt;
+            console.log("total is :" + total);
+
+
+          } else {
+            var total = listDate.length;
+
+          }
+
+          $('#leave_count_edit_admin').val(total);
+        }
+      }
+
+      function admin_test4() {
+        var sat_sun = '<?php echo  $sat_sun; ?>';
+        let sat_sun_data = JSON.parse(sat_sun);
+
+        // var datepicker_working_list='<?php   $datepicker_working_list; ?>';
+        // let datepicker_working_list_data=JSON.parse(datepicker_working_list);
+
+        var sun_sat_range = [];
+
+        var holiday_range = [];
+        //console.log(sat_sun_data);
+        //console.log(sat_sun_data['sun'].length);
+
+        for (var k = 0; k < sat_sun_data['sun'].length; k++) {
+          sun_sat_range.push(sat_sun_data["sun"][k]);
+        }
+
+        // console.log(sun_sat_range);        
+
+
+
+        // for (var j = 0; j < holiday_data.length; j++)
+        // {    
+        // holiday_range.push(holiday_data[j].holiday_date);
+        // }
+
+
+
+        $("#date1-edit-admin").datepicker({
+          beforeShowDay: function (date) {
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var day = date.getDate();
+
+            // Change format of date
+            var newdate = day + "-" + month + '-' + year;
+            //   console.log(newdate);
+
+            for (var j = 0; j < only_sat_sun2['sun'].length; j++) {
+              var s_range = [only_sat_sun2['sun'][j]];
+
+              if ($.inArray(newdate, s_range) != -1) {
+                return [true, "sun_sat"];
+              }
+
+            }
+
+
+            return [true];
+          },
+
+          onSelect: function () {
+            myfunc();
+          }
+
+        });
+
+
+        $("#date2-edit-admin").datepicker({
+          beforeShowDay: function (date) {
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var day = date.getDate();
+
+            // Change format of date
+            var newdate = day + "-" + month + '-' + year;
+            //   console.log(newdate);
+
+
+
+            for (var j = 0; j < only_sat_sun2['sun'].length; j++) {
+              var s_range = [only_sat_sun2['sun'][j]];
+
+              if ($.inArray(newdate, s_range) != -1) {
+                return [true, "sun_sat"];
+              }
+
+            }
+
+            return [true];
+          },
+
+
+          onSelect: function () {
+            myfunc();
+          }
+        });
+
+        var days;
+
+        function myfunc() {
+
+
+          var startDate = $("#date1-edit-admin").datepicker("getDate");
+          var endDate = $("#date2-edit-admin").datepicker("getDate");
+
+          function convert(startDate) {
+            var date = new Date(startDate),
+              mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+              day = ("0" + date.getDate()).slice(-2);
+            return [date.getFullYear(), mnth, day].join("-");
+          }
+
+          function convert(endDate) {
+            var date = new Date(endDate),
+              mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+              day = ("0" + date.getDate()).slice(-2);
+            return [date.getFullYear(), mnth, day].join("-");
+          }
+
+          var STARTDATE = convert(startDate);
+          var ENDDATE = convert(endDate);
+          // console.log(endDate);
+
+          var listDate = [];
+          var dateMove = new Date(STARTDATE);
+          var strDate = STARTDATE;
+
+
+          if (strDate != ENDDATE) {
+            while (strDate < ENDDATE) {
+              var strDate = dateMove.toISOString().slice(0, 10);
+              listDate.push(strDate);
+              dateMove.setDate(dateMove.getDate() + 1);
+            }
+          } else if (strDate == ENDDATE) {
+            //     while (strDate==ENDDATE)
+            // {
+            var strDate = dateMove.toISOString().slice(0, 10);
+            listDate.push(strDate);
+            dateMove.setDate(dateMove.getDate());
+            //} 
+          }
+
+          var holiday = holiday_range;
+          var sunSAT = sun_sat_range;
+          console.log(holiday.length);
+          console.log(sunSAT);
+          console.log(listDate);
+
+          var count = 0;
+          var countt = 0;
+          //          console.log(holiday);
+          // console.log(sunSAT);
+          //        console.log(listDate);
+
+          if (sunSAT != 0) {
+
+
+            for (var j = 0; j < listDate.length; j++) {
+              var p = sunSAT.includes(listDate[j]);
+              console.log(p);
+              if (p == true) {
+                //   countt=1;
+                countt++;
+              }
+              // else
+              // {
+              //       countt=0;
+              // }
+            }
+
+
+            console.log("sunsat is :" + countt);
+            console.log("holiday is :" + count);
+            console.log("listdate is :" + listDate.length);
+            var total = listDate.length - count - countt;
+            console.log("total is :" + total);
+
+
+          } else {
+            var total = listDate.length;
+
+          }
+
+          $('#leave_count_edit_admin').val(total);
+        }
+      }
+
+
+      ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      // //apply leave section
+      var date_picker_holiday_list = '<?php echo   $date_picker_holiday_list; ?>';
+      let holiday_data = JSON.parse(date_picker_holiday_list);
+
+      var only_sat_sun = '<?php  echo $only_sat_sun; ?>';
+      let only_sat_sun2 = JSON.parse(only_sat_sun);
+
+
+
+      var datepicker_working_list = '<?php  echo $datepicker_working_list; ?>';
+      let datepicker_working_list_data = JSON.parse(datepicker_working_list);
+
+      //  console.log(holiday_data);
+
+
+
+      if (holiday_data != null && datepicker_working_list_data != null) {
+        //        alert("y");
+        test();
+      } else if (holiday_data == null && datepicker_working_list_data != null) {
+        //        alert("n");
+        test2();
+      } else if (holiday_data != null && datepicker_working_list_data == null) {
+        //        alert("n");
+        test3();
+      } else {
+        //         alert("4");
+        test4();
+      }
+
+
+
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////         
+      // Counting leave count for user edit popup
+
+      if (holiday_data != null && datepicker_working_list_data != null) {
+        //        alert("y");
+        user_test();
+      } else if (holiday_data == null && datepicker_working_list_data != null) {
+        //        alert("n");
+        user_test2();
+      } else if (holiday_data != null && datepicker_working_list_data == null) {
+        //        alert("n");
+        user_test3();
+      } else {
+        //         alert("4");
+        user_test4();
+      }
+
+
+      ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      //Counting leave count for admin edit popup
+      if (holiday_data != null && datepicker_working_list_data != null) {
+        //        alert("y");
+        admin_test();
+      } else if (holiday_data == null && datepicker_working_list_data != null) {
+        //        alert("n");
+        admin_test2();
+      } else if (holiday_data != null && datepicker_working_list_data == null) {
+        //        alert("n");
+        admin_test3();
+      } else {
+        //         alert("4");
+        admin_test4();
+      }
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      // AJAX For User Apply Leave Function
+
+       $('.loader').hide();
+
+      $('body').on('click', '#apply', function (e) {
+        e.preventDefault();
+
+        var leaveType = $('#leave_select').find(':selected').html();
+        var fromDate = $("input[name='date1']").val();
+        var toDate = $("input[name='date2']").val();
+        var leaveCount = $("input[name='leave_count']").val();
+         var reason = $("input[name='reason']").val();
+        var photo = $("input[name='filename']")[0].files[0];
+        var user_id = $('#user_id').val();
+        // console.log(leaveType);
+//	alert(leaveType);
+//	alert(fromDate);
+        if ($("#leave_select option:selected").index() == 0) {
+          alert('Please select leave type');
+          return false;
+        }
+
+        if (fromDate == "") {
+          alert('Please enter start date');
+          return false;
+        }
+        if (toDate == "") {
+          alert('Please enter end date');
+          return false;
+        }
+
+        if (leaveCount <= 0) {
+          alert('Please enter the proper date range');
+          return false;
+        }
+
+if ($("#myFile").val() != "")
+      {
+        var str = photo.name;
+        var a = str.split(".");
+        var last = a[a.length - 1];
+        var ext = ["jpg", "jpeg", "png", "gif"];
+        var status = ext.includes(last);
+        if (status == true) {
+          // return false;
+        } else if (status == false) {
+          alert("Image should be jpg, jpeg, png, gif file");
+          return false;
+        }
+      }
+
+        //FormData
+        var formData = new FormData();
+        formData.append('leaveType', leaveType);
+        formData.append('fromDate', fromDate);
+        formData.append('toDate', toDate);
+        formData.append('leaveCount', leaveCount);
+        formData.append('reason', reason);
+        formData.append('photo', photo);
+        formData.append('user_id', user_id);
+
+        //Loading effect
+        $('body').css('opacity','0.5');
+        $('.loader').show();
+
+        $.ajax({
+          type: 'post',
+          url: 'api.php?api=apply_leave',
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function (data) {
+  //                           console.log(data);
+  location.reload();
+           $(".success-msg").css("z-index", "unset");
+          $(".successfully-saved").css("display", "block").delay(1000);
+         },
+          error: function (data) {
+console.log(data);
+//location.reload();
+            alert(
+            "An error has occcured while applying leave. Please try again"
+        );
+          }
+  
+
+      });
+
+
+
+
+      //Reset button
+      $('body').on('click', '#reset', function () {
+        $('#leave_select').val(0);
+        $("input[name='date1']").val('');
+        $("input[name='date2']").val('');
+        $("input[name='leave_count']").val('');
+        $("input[name='reason']").val('');
+        $("input[name='filename']").replaceWith($("input[name='filename']").val('').clone(
+          true));
+      });
+
+
+      // // AJAX for listing the user leave history
+      var user_id = $('#user_id').val();
+      var formData = new FormData();
+      formData.append('user_id', user_id);
+
+      $.ajax({
+        type: 'post',
+        url: 'api.php?api=user_lv_history',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (res) {
+          //console.log(res);
+          //  $(".history-table").html(res);
+
+          // console.log(res);
+          let data = JSON.parse(res);
+          //  console.log(data);
+          if (data != null) {
+
+            var count = '1';
+
+            for (var i = 0; i < data.length; i++) {
+              var a = data[i].final_status;
+              var b = data[i].final_status;
+              var c = data[i].final_approved_date;
+
+              $('.user-history-body').append(`
+                                                <tr class='table-data' data-id=` + data[i].id + ` data-user-id=` +
+                data[i].user_id + `>
+                                                <td>` + count + `</td>
+                                                <td>` + data[i].Req_date + `</td>
+                                                <td class='type'>` + data[i].leave_type + `</td>
+                                                <td>` + data[i].from + `</td>
+                                                <td>` + data[i].to + `</td>
+                                                <td class='count'>` + data[i].count + `</td>
+                                                <td>` + data[i].reason + `</td>
+                                                <td></td>
+                                                <td class='status'>` + data[i].final_status + `</td>
+                                                <td>` + (c == "null" ? `` : c) + `</td>
+                                                <td>` + (b == 'Pending' ?
+                  '<i class="fa fa-pencil-alt user-pencil"></i>' : '') + `</td>
+                                                <td>` + (a == 'Pending' ? '<i class="fa fa-times user-cross"></i>' :
+                  '') + `</td>
+                                         </tr>
+                                     `);
+              count++;
+            }
+          } else {
+            $('.user-history-body').append(`
+                                   <tr>
+                        <td><span>No Leave History</span></td>
+                  </tr>
+                         `);
+          }
+        },
+        error: function (data) {
+          alert(
+            "An error has occcured while listing user leave history. Please try again"
+          );
+        }
+      });
+
+
+      ///////////////////////////////////////////////////////////////////////////////////////////////
+      //AJAX FOR FUNCTIONAL MANAGER APPROVE AND DENY
+      $('body').on('click', '.approve', function () {
+        var td = $(this).closest('.more-info').prev('.table-data');
+        // var deduct = $(this).closest('.more-info').find('.deduct_select').find(':selected').html();
+        var apply_id = $(td).attr('data-id');
+        var user_id = $(td).attr('data-user-id');
+        var login_id = $('#user_id').val();
+        //    alert(apply_id);
+
+        // var type = $('.type').text();
+        var type = $(this).closest('.more-info').prev('.table-data').find('.type').text();
+        //             var count = $('.count').text();
+       // var count = $(this).closest('.more-info').prev('.table-data').find('.count').text();
+        // alert(count);
+        // console.log(count);
+               var count = $(td).attr('data-count');
+        //             var funct_status = $('.funct_status').text();
+        var funct_status = "approved";
+        //                var post_status = $('.post_status').text();
+        var post_status = "approved";
+
+        $.ajax({
+          type: 'post',
+          url: 'api.php?api=approved_status',
+          data: {
+            apply_id: apply_id,
+            login_id: login_id,
+            user_id: user_id,
+            type: type,
+            count: count,
+            funct_status: funct_status,
+            post_status: post_status
+            // deduct:deduct
+          },
+          success: function (data) {
+           alert(data); 
+       // $(".admin-history-body").load("admin-leave-history.php" + " .admin-history-body");
+       //  $(".grid-weekly-table").load("admin-leave-history.php" + " .grid-weekly-table");
+                $('.grid-row-1').load('admin-leave-history.php');
+        $('.grid-row-2').load('user-calendar.php');
+ $('.grid-row-2').load('user-calendar.php');
+          },
+          error: function (data) {
+            alert(
+              "An error has occcured while approving. Please try again"
+            );
+          }
+        });
+      });
+
+
+      // Ajax for admin deny function.
+      $('body').on('click', '.deny', function () {
+        // alert("no");
+        var td = $(this).closest('.more-info').prev('.table-data');
+        // var deduct = $(this).closest('.more-info').find('.deduct_select').find(':selected').html();
+        var apply_id = $(td).attr('data-id');
+        var user_id = $(td).attr('data-user-id');
+        var login_id = $('#user_id').val();
+        //        var type = $('.type').text();
+        var type = $(this).closest('.more-info').prev('.table-data').find('.type').text();
+      
+        // var count = $(this).closest('.more-info').prev('.table-data').find('.count').text();
+       var count = $(td).attr('data-count');
+
+        // var funct_status = $('.funct_status').text();
+        // var post_status = $('.post_status').text();
+        var funct_status = "denied";
+        var post_status = "denied";
+
+        //alert(type);
+        // alert(user_id);
+        // alert(login_id);
+         //alert(type);
+      //   alert(count);
+        // alert(funct_status);
+        // alert(post_status);
+
+
+        $.ajax({
+          type: 'post',
+          url: 'api.php?api=denied_status',
+          data: {
+            apply_id: apply_id,
+            login_id: login_id,
+            user_id: user_id,
+            type: type,
+            count: count,
+            funct_status: funct_status,
+            post_status: post_status
+            // deduct:deduct
+          },
+          success: function (data) {
+            alert(data);
+            // $(".admin-history-body").load("admin-leave-history.php" + " .admin-history-body");
+            // $(".grid-weekly-table").load("admin-leave-history.php" + " .grid-weekly-table");
+                  $('.grid-row-1').load('admin-leave-history.php');
+           $('.grid-row-2').load('admin-calendar.php');           
+                      $('.grid-row-2').load('admin-calendar.php');           
+          },
+          error: function (data) {
+            alert(
+              "An error has occcured while approving. Please try again"
+            );
+          }
+        });
+      });
+
+
+
+      // Popup for adding holiday list for admin section
+      $('body').on('click', '.add-holiday', function () {
+        $(".notes-overlay, .notes-content").addClass("active");
+        $(".panel").css({
+          "pointer-events": "none",
+          "user-select": "none",
+          "filter": "brightness(25%)"
+        });
+      });
+      $("body").on("click", ".close", function () {
+        $(".notes-overlay, .notes-content").removeClass("active");
+        $(".panel").css({
+          "pointer-events": "unset",
+          "user-select": "unset",
+          "filter": "unset"
+        });
+      });
+
+      // Popup for adding working day list for admin section
+      $('body').on('click', '.add-working', function () {
+        $(".notes1-overlay, .notes1-content").addClass("active");
+        $(".panel").css({
+          "pointer-events": "none",
+          "user-select": "none",
+          "filter": "brightness(25%)"
+        });
+      });
+      $("body").on("click", ".close1", function () {
+        $(".notes1-overlay, .notes1-content").removeClass("active");
+        $(".panel").css({
+          "pointer-events": "unset",
+          "user-select": "unset",
+          "filter": "unset"
+        });
+      });
+
+
+
+
+
+
+      //Popup for editing user leave section
+      $('body').on('click', '.user-pencil', function () {
+        //  $(".notes-overlay-edit1, .notes-content-edit1").addClass("active");
+        // $(".grid-container").css({
+        //     "pointer-events": "none",
+        //     "user-select": "none",
+        //     "filter": "brightness(25%)"
+        // });
+        var del = $(this);
+        var apply_id = $(del).closest('.table-data').attr('data-id');
+        var user_id = $(del).closest('.table-data').attr('data-user-id');
+        // alert(apply_id);
+        // alert(user_id);
+
+        $.ajax({
+          type: 'post',
+          url: 'api.php?api=edit_box',
+          data: {
+            user_id: user_id,
+            apply_id: apply_id
+          },
+          success: function (data2) {
+
+            $(".notes-overlay-edit1").html(data2).addClass("active");
+
+            $(function () {
+              $("#date1-edit-user").datepicker();
+            });
+
+            $(function () {
+              $("#date2-edit-user").datepicker();
+            });
+
+
+
+            if (holiday_data != null && datepicker_working_list_data != null) {
+              //        alert("y");
+              user_test();
+            } else if (holiday_data == null && datepicker_working_list_data != null) {
+              //        alert("n");
+              user_test2();
+            } else if (holiday_data != null && datepicker_working_list_data == null) {
+              //        alert("n");
+              user_test3();
+            } else {
+              //         alert("4");
+              user_test4();
+            }
+
+            // if(holiday_data!=null)
+            //     {
+            // //        alert("y");
+            //                     edit_holiday();
+            //     }
+            //     else if(holiday_data==null)
+            //      {
+            //   //        alert("n");
+            //        edit_no_holiday();
+            //     }
+
+
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////
+
+          },
+          error: function (data) {
+            alert(
+              "An error has occcured while editing user leave. Please try again"
+            );
+          }
+        });
+
+      });
+
+
+
+      $("body").on("click", ".close-edit-user", function () {
+        $(".notes-overlay-edit1, .notes-content-edit1").removeClass("active");
+        // $(".grid-container").css({
+        //     "pointer-events": "unset",
+        //     "user-select": "unset",
+        //     "filter": "unset"
+        // });
+      });
+
+
+
+
+
+      // Popup for editing admin leave section
+      $('body').on('click', '.admin-pencil', function () {
+        $(".notes-overlay-edit2, .notes-content-edit2").addClass("active");
+        // $(".grid-container").css({
+        //     "pointer-events": "none",
+        //     "user-select": "none",
+        //     "filter": "brightness(25%)"
+        // });
+        var del = $(this);
+        var apply_id = $(del).closest('.table-data').attr('data-id');
+        var user_id = $(del).closest('.table-data').attr('data-user-id');
+        $.ajax({
+          type: 'post',
+          url: 'api.php?api=edit_box',
+          data: {
+            user_id: user_id,
+            apply_id: apply_id
+          },
+          success: function (data) {
+
+            $(".notes-overlay-edit1").html(data).addClass("active");
+            $(function () {
+              $("#date1-edit-user").datepicker();
+            });
+            $(function () {
+              $("#date2-edit-user").datepicker();
+            });
+
+
+            if (holiday_data != null && datepicker_working_list_data != null) {
+              //        alert("y");
+              user_test();
+            } else if (holiday_data == null && datepicker_working_list_data != null) {
+              //        alert("n");
+              user_test2();
+            } else if (holiday_data != null && datepicker_working_list_data == null) {
+              //        alert("n");
+              user_test3();
+            } else {
+              //         alert("4");
+              user_test4();
+            }
+
+
+            //////////////////////////////////////////////////////////////////////////////////
+
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////
+          },
+          error: function (data) {
+            alert(
+              "An error has occcured while editing user leave. Please try again"
+            );
+          }
+        });
+
+      });
+
+
+
+
+      $("body").on("click", ".close-edit-admin", function () {
+        $(".notes-overlay-edit2, .notes-content-edit2").removeClass("active");
+        // $(".grid-container").css({
+        //     "pointer-events": "unset",
+        //     "user-select": "unset",
+        //     "filter": "unset"
+        // });
+      });
+
+      //Ajax for adding holiday list
+      $('body').on('click', '.submit-holiday', function () {
+        //  e.preventDefault();
+
+        var holiday_day = $("input[name='day']").val();
+        var holiday_date = $("input[name='date3']").val();
+        var holiday_title = $("input[name='holiday']").val();
+
+        // console.log(holiday_day);
+        // console.log(holiday_date);
+        // console.log(holiday_title);
+
+        //FormData
+        var formData = new FormData();
+        formData.append('holiday_day', holiday_day);
+        formData.append('holiday_date', holiday_date);
+        formData.append('holiday_title', holiday_title);
+
+        $.ajax({
+          type: 'post',
+          url: 'api.php?api=insert_holiday',
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function (data) {
+            //  console.log(data);
+            //                         $(".holiday-table-body").html(data);
+            $(".holiday-table-body").load("admin-section.php" + " .holiday-table-body");
+  $('.grid-row-1').load('admin-leave-history.php');
+          $('.grid-row-2').load('user-calendar.php');
+          },
+          error: function (data) {
+            alert(
+              "An error has occcured while adding holiday. Please try again"
+            );
+          }
+        });
+
+        $("input[name='day']").val('');
+        $("input[name='date3']").val('');
+        $("input[name='holiday']").val('');
+        $(".notes-overlay, .notes-content").removeClass("active");
+        $(".success-msg").css("z-index", "unset");
+        $(".successfully-saved").css("display", "block").delay(1000)
+          .fadeOut(400);
+
+      });
+
+
+
+
+
+      //Ajax for adding working day list
+      $('body').on('click', '.submit-working', function (e) {
+        e.preventDefault();
+
+        var working_day = $("input[name='day1']").val();
+        var working_date = $("input[name='date4']").val();
+        var working_title = $("input[name='working']").val();
+
+        //  console.log(working_day);
+        //console.log(working_date);
+        // console.log(working_title);
+
+        //FormData
+        var formData = new FormData();
+        formData.append('working_day', working_day);
+        formData.append('working_date', working_date);
+        formData.append('working_title', working_title);
+
+        $.ajax({
+          type: 'post',
+          url: 'api.php?api=insert_Workinglist',
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function (data) {
+            //console.log(data);
+            alert(data);
+            //                    location.href = "admin-section.php";
+            //                       $(".working-table-body").load(data);
+            $(".working-table-body").load("admin-section.php" + " .working-table-body");
+     $('.grid-row-2').load('admin-calendar.php');
+          },
+          error: function (data) {
+            alert(
+              "An error has occcured while adding holiday. Please try again"
+            );
+          }
+        });
+
+        $("input[name='day1']").val('');
+        $("input[name='date4']").val('');
+        $("input[name='working']").val('');
+        $(".notes1-overlay, .notes1-content").removeClass("active");
+        $(".success-msg").css("z-index", "unset");
+        $(".successfully-saved").css("display", "block").delay(1000)
+          .fadeOut(400);
+      });
+
+      // Doctor note big image
+      $("body").on("click", ".note-img img", function () {
+        var $src = $(this).attr("src");
+        $(".show").fadeIn();
+        $(".img-show img").attr("src", $src);
+      });
+
+      $("span, .overlay").click(function () {
+        $(".show").fadeOut();
+      });
+
+
+
+      // Submit ajax for edit user leave
+      $('body').on('click', '.edit-user', function () {
+        //  $( "#user-history-body" ).load('user-leave-history.php' + " #user-history-body" );
+
+        var main = $(this).parent('.edit-btn').prev('.notes-text-edit1');
+        var user_id = $(main).find("input[name='edit-user-id']").val();
+        var applyID = $(main).find("input[name='edit-user-apply-id']").val();
+        var leaveType = $(main).find('#leave_select_edit_user').find(':selected')
+          .html();
+        var fromDateEditUser = $(main).find("input[name='date1-edit-user']").val();
+        var toDateEditUser = $(main).find("input[name='date2-edit-user']").val();
+        var count = $(main).find("input[name='leave_count_edit_user']").val();
+        var reasonEditUser = $(main).find("textarea[name='reason-edit-user']").val();
+
+        //   alert(main);
+        // alert(user_id);
+        // alert(applyID);
+        // alert(leaveType);
+        // alert(fromDateEditUser);
+        // alert(toDateEditUser);
+        // alert(count);
+        // alert(reasonEditUser);
+        //FormData
+        var formData = new FormData();
+        formData.append('user_id', user_id);
+        formData.append('applyID', applyID);
+        formData.append('leaveType', leaveType);
+        formData.append('fromDateEditUser', fromDateEditUser);
+        formData.append('toDateEditUser', toDateEditUser);
+        formData.append('count', count);
+        formData.append('reasonEditUser', reasonEditUser);
+        $.ajax({
+          type: 'post',
+          url: 'api.php?api=edit',
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function () {
+            //alert(data);
+            location.reload();
+            //console.log(data);
+            // $(".grid-row-1").load("user-leave-history.php" + " .grid-row-1");   
+            //  $('.grid-row-1').load('user-leave-history.php');
+          },
+          error: function (data) {
+            alert(
+              "An error has occcured while editing user leave. Please try again"
+            );
+          }
+        });
+        //                $(".grid-container").load("leave-management.php" + " .grid-container");   
+        // $(".user-history-body").load("user-leave-history.php" + " .user-history-body");
+        // $('.grid-row-1').load('user-leave-history.php');
+        $(".notes-overlay-edit1, .notes-content-edit1").removeClass("active");
+        $(".success-msg").css("z-index", "unset");
+        $(".successfully-edited").css("display", "block").delay(1000)
+          .fadeOut(400);
+        // window.location.reload();
+        //  $(".admin-history-body").load("admin-leave-history.php" + " .admin-history-body");
+        //  $(".user-history-body").load("user-leave-history.php" + " .user-history-body");
+        // $('.grid-row-1').load('user-leave-history.php');
+        // $('.grid-row-1').load('user-leave-history.php' + " .user-history-body");
+
+        //           window.location.reload();
+      });
+
+
+
+
+
+    });
+  </script>
+</body>
+
+</html>
